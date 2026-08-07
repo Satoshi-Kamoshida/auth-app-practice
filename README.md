@@ -17,10 +17,18 @@ COACHTECH 教材 Tutorial 10-1「認証機能 ハンズオン演習」で作成�
 ## 学んだこと
 
 - （**自分の言葉で2〜3項目書きましょう**）
--
--
+- **各ファイルの役割**
+
+| ファイル                      | 役割                                      |
+| ----------------------------- | ----------------------------------------- |
+| `config/fortify.php`          | Fortifyの設定（ログイン後の遷移先など）   |
+| `FortifyServiceProvider.php`  | Fortifyに「どの画面を表示するか」を教える |
+| `routes/web.php`              | URLとコントローラーを結び付ける           |
+| `DashboardController.php`     | ログイン後の処理を担当する                |
+| `resources/views/*.blade.php` | 実際に表示する画面（HTML）                |
 
 ## 動作確認
 
 （**どうやって動かして確認するかを記載してください**）
+
 # auth-app-practice
