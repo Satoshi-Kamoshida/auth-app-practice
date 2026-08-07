@@ -49,6 +49,77 @@ COACHTECH 教材 Tutorial 10-1「認証機能 ハンズオン演習」で作成�
 | `database`        | **データベース関連**（マイグレーション・Seeder・Factoryなど） |
 | `public`          | **ブラウザから直接アクセスされる入口**                        |
 
+## `FortifyServiceProvider.php`
+
+| 項目             | 内容                                                                     |
+| ---------------- | ------------------------------------------------------------------------ |
+| ファイル         | `app/Providers/FortifyServiceProvider.php`                               |
+| 役割             | **Fortifyの動作をカスタマイズする設定ファイル**                          |
+| 何を書く？       | ログイン画面・登録画面の指定、認証処理、ユーザー登録処理、レート制限など |
+| いつ実行される？ | Laravel起動時（ServiceProviderとして読み込まれる）                       |
+
+### よく使う設定
+
+- **ログイン画面を指定**
+
+```php
+Fortify::loginView(function () {
+    return view('auth.login');
+});
+```
+
+→ `/login` にアクセスしたときに `auth/login.blade.php` を表示する。
+
+---
+
+- **登録画面を指定**
+
+```php
+Fortify::registerView(function () {
+    return view('auth.register');
+});
+```
+
+→ `/register` にアクセスしたときに `auth/register.blade.php` を表示する。
+
+---
+
+- **ユーザー登録処理を指定**
+
+```php
+Fortify::createUsersUsing(CreateNewUser::class);
+```
+
+→ ユーザー登録時に `CreateNewUser` クラスを実行する。
+
+---
+
+- **ログイン試行回数を制限**
+
+```php
+RateLimiter::for('login', function (Request $request) {
+    return Limit::perMinute(5);
+});
+```
+
+→ ログインを1分間に5回までに制限する。
+
+---
+
+### イメージ
+
+```
+Laravel起動
+      │
+      ▼
+FortifyServiceProvider
+      │
+      ├── loginView()     → ログイン画面
+      ├── registerView()  → 登録画面
+      ├── createUsersUsing() → ユーザー登録処理
+      └── RateLimiter()   → ログイン試行回数制限
+```
+
 ## 動作確認
 
 （**どうやって動かして確認するかを記載してください**）
