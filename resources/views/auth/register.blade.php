@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー登録</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #3490dc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2779bd;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ユーザー登録</h1>
+
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
+
+        <div class="form-group">
+            <label for="name">名前</label>
+            <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+            @error('name')
+                <p class="error">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="email">メールアドレス</label>
+            <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+            @error('email')
+                <p class="error">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" id="password" name="password" required>
+            @error('password')
+                <p class="error">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="password_confirmation">パスワード（確認）</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" required>
+        </div>
+
+        <button type="submit">登録</button>
+    </form>
+
+    <p class="link">
+        <a href="{{ route('login') }}">すでにアカウントをお持ちの方はこちら</a>
+    </p>
+</body>
+
+</html>
