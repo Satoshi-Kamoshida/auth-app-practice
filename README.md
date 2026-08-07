@@ -106,7 +106,7 @@ RateLimiter::for('login', function (Request $request) {
 
 ---
 
-### イメージ
+- **イメージ**
 
 ```
 Laravel起動
@@ -118,6 +118,79 @@ FortifyServiceProvider
       ├── registerView()  → 登録画面
       ├── createUsersUsing() → ユーザー登録処理
       └── RateLimiter()   → ログイン試行回数制限
+```
+
+### RouteServiceProvider と routes/web.php の違い
+
+| ファイル                   | 役割                                                                       |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `routes/web.php`           | URLとコントローラーを結び付ける（ルート一覧を書く）                        |
+| `RouteServiceProvider.php` | ルート全体の設定を行う（ルートの初期設定・ルートモデルバインディングなど） |
+
+- **イメージ**
+
+ブラウザ
+↓
+RouteServiceProvider（ルート全体の設定）
+↓
+routes/web.php（URL一覧）
+↓
+Controller
+↓
+View
+
+## ルートモデルバインディング
+
+### 一言でいうと
+
+**URLのIDから、自動でモデルを取得してくれる機能。**
+
+### 通常の書き方
+
+```php
+Route::get('/posts/{id}', [PostController::class, 'show']);
+
+public function show($id)
+{
+    $post = Post::findOrFail($id);
+
+    return view('posts.show', compact('post'));
+}
+```
+
+### ルートモデルバインディング
+
+```php
+Route::get('/posts/{post}', [PostController::class, 'show']);
+
+public function show(Post $post)
+{
+    return view('posts.show', compact('post'));
+}
+```
+
+Laravelが内部で
+
+```php
+Post::findOrFail($id)
+```
+
+を自動で実行してくれる。
+
+### イメージ
+
+```
+/posts/5
+     │
+     ▼
+Laravel
+(Post::findOrFail(5))
+     │
+     ▼
+Postモデル
+     │
+     ▼
+Controller
 ```
 
 ## 動作確認
