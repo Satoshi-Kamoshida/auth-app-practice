@@ -193,6 +193,129 @@ Postモデル
 Controller
 ```
 
+## RouteServiceProvider の `HOME` とは？
+
+### 一言でいうと
+
+**ログイン成功後に最初に表示する画面（ホーム画面）のURL。**
+
+### 昔のLaravel
+
+```php
+public const HOME = '/home';
+```
+
+ログインすると
+
+```
+ログイン
+    ↓
+/home
+```
+
+へ移動する。
+
+### なぜデフォルトで入っている？
+
+Laravelはログイン機能をよく使うため、
+
+「ログイン後はとりあえず `/home` へ移動する」
+
+という初期設定を最初から用意している。
+
+### Laravel11以降
+
+現在は `RouteServiceProvider` ではなく、
+
+```php
+config/fortify.php
+
+'home' => '/dashboard',
+```
+
+のように設定することが多い。
+
+## `boot()` メソッドとは？
+
+**Laravel起動時に最初に実行されるメソッド。**
+
+Fortifyで必要な設定をここで行う。
+
+---
+
+## アクションクラスとは？
+
+**1つの仕事だけを担当するクラス。**
+
+例
+
+| クラス               | 担当する処理       |
+| -------------------- | ------------------ |
+| `CreateNewUser`      | ユーザー登録       |
+| `UpdateUserPassword` | パスワード変更     |
+| `ResetUserPassword`  | パスワードリセット |
+
+例
+
+```php
+Fortify::createUsersUsing(CreateNewUser::class);
+```
+
+→ 「ユーザー登録時は `CreateNewUser` クラスを実行する」
+
+---
+
+## レート制限とは？
+
+**一定時間内に実行できる回数を制限する機能。**
+
+例
+
+```php
+RateLimiter::for('login', function () {
+    return Limit::perMinute(5);
+});
+```
+
+→ ログインは **1分間に5回まで**。
+
+目的は、ブルートフォース攻撃（パスワード総当たり攻撃）を防ぐこと。
+
+## `use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;`
+
+### 一言でいうと
+
+**二段階認証が必要かどうかを判断し、必要なら認証画面へリダイレクトするクラスを読み込む。**
+
+### `use` の意味
+
+他のファイルにあるクラスを読み込む。
+
+```php
+use App\Models\User;
+```
+
+↓
+
+```php
+User::find(1);
+```
+
+と簡潔に書ける。
+
+### `RedirectIfTwoFactorAuthenticatable`
+
+ログイン成功後、
+
+- 二段階認証が必要 → 認証コード入力画面へ
+- 不要 → ログイン完了
+
+という処理を担当するクラス。
+
+### ログイン時はアクションで、ログイン後はコントローラーの理由
+
+- ログイン後だからActionが使えないのではなく、「Controllerを入口にして、必要ならActionへ処理を委譲する」という役割分担をしている
+
 ## 動作確認
 
 （**どうやって動かして確認するかを記載してください**）
